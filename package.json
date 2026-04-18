@@ -1,0 +1,35 @@
+{
+  "name": "ask-panel-mcp",
+  "version": "0.1.0",
+  "description": "MCP server that opens a persistent browser panel so Claude can push structured questions and you can paste images, drop files, or type notes back — without leaving your terminal.",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "ask-panel-mcp": "src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "human-in-the-loop",
+    "hitl"
+  ],
+  "author": "Dale Linn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dlerhetal/ask-panel-mcp.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "express": "^4.21.1",
+    "multer": "^2.0.0",
+    "open": "^10.1.0"
+  }
+}

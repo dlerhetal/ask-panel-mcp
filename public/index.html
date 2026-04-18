@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ask panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>ask panel</h1>
+  <span id="status" class="status status--disconnected">disconnected</span>
+</header>
+
+<main>
+
+  <section id="questions-area" class="card" data-pristine="yes">
+    <h2>Waiting for questions…</h2>
+    <p class="muted">Claude will push questions here when needed. This tab stays open for the whole session.</p>
+  </section>
+
+  <section class="card send-card">
+    <h2>Send to Claude</h2>
+    <p class="muted">Paste (Ctrl+V) a screenshot anywhere on this tab, drag files onto it, use the button, or type a note. Click <strong>Send</strong> when ready.</p>
+    <textarea id="notes" placeholder="Optional note to Claude…"></textarea>
+    <div id="attachments" class="attachments"></div>
+    <div class="send-row">
+      <input type="file" id="file-picker" multiple hidden>
+      <button type="button" id="attach-btn" class="secondary">Attach files</button>
+      <button type="button" id="send-btn" class="primary">Send</button>
+    </div>
+  </section>
+
+</main>
+
+<div id="drop-overlay" class="drop-overlay hidden">Drop to attach</div>
+
+<script src="app.js"></script>
+</body>
+</html>

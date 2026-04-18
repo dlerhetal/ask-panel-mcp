@@ -1,0 +1,256 @@
+:root {
+  --bg: #F0E6D2;
+  --card: #FBF5E7;
+  --text: #1A3C6E;
+  --muted: #5c6b80;
+  --border: rgba(26, 60, 110, 0.25);
+  --accent: #556B2F;
+  --accent-hover: #44552A;
+  --danger: #CF2A27;
+  --chip: #e6dcc3;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  border-bottom: 2px solid var(--border);
+  background: var(--card);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.status {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  text-transform: lowercase;
+}
+.status--connected {
+  background: rgba(85, 107, 47, 0.15);
+  color: var(--accent);
+}
+.status--disconnected {
+  background: rgba(207, 42, 39, 0.12);
+  color: var(--danger);
+}
+
+main {
+  max-width: 760px;
+  margin: 24px auto;
+  padding: 0 20px 40px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin-bottom: 18px;
+}
+
+.card h2 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.muted {
+  color: var(--muted);
+  margin: 0 0 12px 0;
+  font-size: 13px;
+}
+
+.field {
+  margin-bottom: 14px;
+}
+
+.field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.field input[type="text"],
+.field textarea,
+.field select,
+#notes {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
+  background: white;
+  color: var(--text);
+}
+
+.field textarea,
+#notes {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.field input[type="text"]:focus,
+.field textarea:focus,
+.field select:focus,
+#notes:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+  border-color: var(--accent);
+}
+
+.multiselect {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 400;
+  margin-bottom: 0;
+}
+
+.check-row input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+button {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+button:hover {
+  border-color: var(--accent);
+}
+
+button.primary {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+button.primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+button.primary:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+button.secondary {
+  background: transparent;
+}
+
+.question-set {
+  padding: 4px 0 0 0;
+}
+.question-set.submitted {
+  opacity: 0.6;
+}
+
+.send-row {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.send-card #notes {
+  margin-bottom: 12px;
+}
+
+.attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--chip);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 10px 4px 4px;
+  font-size: 12px;
+}
+
+.chip img {
+  width: 26px;
+  height: 26px;
+  object-fit: cover;
+  border-radius: 999px;
+  display: block;
+}
+
+.chip button {
+  background: transparent;
+  border: none;
+  padding: 0 2px;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--danger);
+  cursor: pointer;
+  font-weight: 700;
+}
+.chip button:hover {
+  border: none;
+}
+
+.drop-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(85, 107, 47, 0.88);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: 600;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.drop-overlay.hidden {
+  display: none;
+}
