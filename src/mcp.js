@@ -13,7 +13,7 @@ const TOOLS = [
   {
     name: 'ask_user_questions',
     description:
-      "Push a batch of structured questions to the user's browser panel and wait for their answers. Use this to gather decisions, clarifications, or requirements mid-conversation instead of asking in prose. The panel opens automatically on first use. Supported field types: text, textarea, select, multiselect. For file attachments, ask a text question and have the user drop the file in the panel's Send zone; then call get_panel_queue.",
+      "Push a batch of structured questions to the user's browser panel and wait for their answers. Use this to gather decisions, clarifications, or requirements mid-conversation instead of asking in prose. The panel opens automatically on first use. Supported field types: text, textarea, select, multiselect, number, date, file. Number and date return strings; file returns an object with originalName, mimeType, size, and diskPath. For ad-hoc attachments outside a question set, the user can drop files in the Send zone and you call get_panel_queue.",
     inputSchema: {
       type: 'object',
       properties: {
@@ -39,7 +39,7 @@ const TOOLS = [
               },
               type: {
                 type: 'string',
-                enum: ['text', 'textarea', 'select', 'multiselect'],
+                enum: ['text', 'textarea', 'select', 'multiselect', 'number', 'date', 'file'],
                 description: 'Field type.',
               },
               options: {
@@ -49,7 +49,23 @@ const TOOLS = [
               },
               placeholder: {
                 type: 'string',
-                description: 'Placeholder text for text and textarea fields.',
+                description: 'Placeholder text for text, textarea, and number fields.',
+              },
+              min: {
+                type: 'number',
+                description: 'Minimum value for number fields.',
+              },
+              max: {
+                type: 'number',
+                description: 'Maximum value for number fields.',
+              },
+              step: {
+                type: 'number',
+                description: 'Step value for number fields. Defaults to 1 for integers, 0.01 for decimals.',
+              },
+              accept: {
+                type: 'string',
+                description: 'MIME filter for file fields (e.g. "image/*" or ".pdf,.csv"). Optional.',
               },
               required: {
                 type: 'boolean',
@@ -151,7 +167,7 @@ async function handleGetQueue() {
 
 export function createMcpServer() {
   const server = new Server(
-    { name: 'ask-panel-mcp', version: '0.1.0' },
+    { name: 'ask-panel-mcp', version: '0.2.0' },
     { capabilities: { tools: {} } },
   );
 

@@ -83,6 +83,20 @@ function renderQuestionSet({ id, questions, title }) {
         row.appendChild(span);
         input.appendChild(row);
       });
+    } else if (q.type === 'number') {
+      input = document.createElement('input');
+      input.type = 'number';
+      input.placeholder = q.placeholder || '';
+      if (q.min !== undefined) input.min = q.min;
+      if (q.max !== undefined) input.max = q.max;
+      if (q.step !== undefined) input.step = q.step;
+    } else if (q.type === 'date') {
+      input = document.createElement('input');
+      input.type = 'date';
+    } else if (q.type === 'file') {
+      input = document.createElement('input');
+      input.type = 'file';
+      if (q.accept) input.accept = q.accept;
     } else {
       input = document.createElement('input');
       input.type = 'text';
@@ -108,10 +122,15 @@ function renderQuestionSet({ id, questions, title }) {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const answers = {};
+    const files = [];
     for (const q of questions) {
       if (q.type === 'multiselect') {
         const checked = [...form.querySelectorAll(`input[data-multiselect="${q.id}"]:checked`)];
         answers[q.id] = checked.map((c) => c.value);
+      } else if (q.type === 'file') {
+        const inp = form.querySelector(`#q-${id}-${q.id}`);
+        const f = inp && inp.files && inp.files[0];
+        if (f) files.push({ fieldname: q.id, file: f });
       } else {
         const inp = form.querySelector(`#q-${id}-${q.id}`);
         answers[q.id] = inp ? inp.value : null;
@@ -120,11 +139,11 @@ function renderQuestionSet({ id, questions, title }) {
     submit.disabled = true;
     submit.textContent = 'Submitting…';
     try {
-      const r = await fetch('/answers', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, answers }),
-      });
+      const fd = new FormData();
+      fd.append('id', id);
+      fd.append('answers', JSON.stringify(answers));
+      for (const { fieldname, file } of files) fd.append(fieldname, file);
+      const r = await fetch('/answers', { method: 'POST', body: fd });
       if (!r.ok) throw new Error('server rejected answers');
       submit.textContent = 'Sent ✓';
       form.classList.add('submitted');

@@ -9,7 +9,7 @@ Long back-and-forth requirements conversations in Claude Code have two rough edg
 1. Claude asks several questions in prose — you answer in prose — you miss one, Claude re-asks — repeat.
 2. You need to hand Claude a screenshot or file. The native CLI paste doesn't always work. You fall back to screenshotting, saving, copying the filename, pasting into the terminal. By the time you're back you've lost your train of thought.
 
-This puts a small, persistent browser tab next to your terminal. Claude pushes structured forms into it (text, textarea, select, multiselect). You paste Ctrl+V screenshots, drag-drop files, or type notes into the always-visible Send zone and click Send — Claude picks them up on the next tool call.
+This puts a small, persistent browser tab next to your terminal. Claude pushes structured forms into it (text, textarea, select, multiselect, number, date, file). You paste Ctrl+V screenshots, drag-drop files, or type notes into the always-visible Send zone and click Send — Claude picks them up on the next tool call.
 
 ## Prior art / credit
 
@@ -60,9 +60,13 @@ Start a fresh Claude Code session. The panel opens automatically the first time 
 
 Push a batch of 1+ questions to the panel and wait for answers.
 
-Field types: `text`, `textarea`, `select`, `multiselect`.
+Field types: `text`, `textarea`, `select`, `multiselect`, `number`, `date`, `file`.
 
-File attachments are intentionally *not* a question field type. Claude asks in a text question ("attach the spreadsheet"), you drop the file in the always-visible Send zone, Claude calls `get_panel_queue` to fetch it. This keeps question flow simple and makes file attachments work the same way whether you were asked or volunteered.
+- `number` accepts optional `min`, `max`, `step`. Returns the raw string (parse to number on your side).
+- `date` renders a native date picker. Returns ISO `YYYY-MM-DD`.
+- `file` renders a file picker. Returns an object `{ originalName, mimeType, size, diskPath }`. Use `accept` to filter (e.g. `"image/*"`, `".pdf,.csv"`).
+
+For ad-hoc attachments *outside* a question set, use the always-visible Send zone and `get_panel_queue` — same flow as before.
 
 Example call (what Claude sends):
 
@@ -71,16 +75,21 @@ Example call (what Claude sends):
   "title": "ask-panel-mcp setup",
   "questions": [
     { "id": "name", "label": "Project name?", "type": "text" },
-    { "id": "stack", "label": "Stack?", "type": "select", "options": ["Node", "Python"] }
+    { "id": "stack", "label": "Stack?", "type": "select", "options": ["Node", "Python"] },
+    { "id": "budget", "label": "Budget ($)?", "type": "number", "min": 0 },
+    { "id": "deadline", "label": "Ship by?", "type": "date" },
+    { "id": "spec", "label": "Upload the spec", "type": "file", "accept": ".pdf,.md" }
   ]
 }
 ```
 
-Returns: `{"name": "...", "stack": "..."}`
+Returns: `{"name": "...", "stack": "...", "budget": "500", "deadline": "2026-06-01", "spec": {"originalName": "spec.pdf", ...}}`
 
 ### `get_panel_queue`
 
 Returns anything you've pasted, dropped, or typed in the Send zone since the last call, then clears the queue. Images come back inline as image content; text notes come back as text; other files come back as text references with a path.
+
+Everything sent through the Send zone is also appended to `notes.jsonl` at the project root. Handy when you want to see what you've pinged Claude with across sessions, or `grep` the log from the terminal without re-opening the panel. The file is gitignored.
 
 ## Field trust & security
 
